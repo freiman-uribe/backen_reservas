@@ -1,4 +1,7 @@
 class ServiceRepository {
+  find() {
+    throw new Error("Method not implemented");
+  }
   create(user) {
     throw new Error("Method not implemented");
   }

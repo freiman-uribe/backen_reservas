@@ -13,7 +13,13 @@ class MongoReservationRepository extends ReservationRepository {
   }
 
   async findAll() {
-    return await ReservationModel.find();
+    return await ReservationModel.find()
+      .populate("servicio", ["nombre"])
+      .populate("cliente", ["nombre"]);
+  }
+
+  async findAllActive() {
+    return await ReservationModel.find({ estado: "activo" });
   }
 
   async findById(id) {

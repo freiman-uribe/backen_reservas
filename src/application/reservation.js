@@ -11,6 +11,14 @@ class ItemReservation {
     return await this.reservationRepository.findAll();
   }
 
+  async getAllItemsActive() {
+    return await this.reservationRepository.findAllActive();
+  }
+
+  async getAllItemsClient(clientId) {
+    return await this.reservationRepository.findAllActive(clientId);
+  }
+
   async getItem(id) {
     return await this.reservationRepository.findById(id);
   }

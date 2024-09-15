@@ -17,6 +17,27 @@ router.get('/', async(req, res) => {
     }
 });
 
+router.get("/cliente", async (req, res) => {
+  try {
+    const { id } = req.user
+    const services = await itemService.getAllItemsClient(id);
+
+    await responseHandler.success(req, res, services, 201);
+  } catch (error) {
+    await responseHandler.error(req, res, "Error al obtener servicios", 500);
+  }
+});
+
+router.get("/list", async (req, res) => {
+  try {
+    const services = await itemService.getAllItemsActive();
+
+    await responseHandler.success(req, res, services, 201);
+  } catch (error) {
+    await responseHandler.error(req, res, "Error al obtener servicios", 500);
+  }
+});
+
 router.post('/', async(req, res) => {
     try {
        const { body } = req;
@@ -24,9 +45,7 @@ router.post('/', async(req, res) => {
         const newSevice = await itemService.createItem(body);
 
         await responseHandler.success(req, res, newSevice, 201);
-    } catch (error) {
-        console.log(error);
-        
+    } catch (error) {        
         await responseHandler.error(req, res, 'Error al crear el servicio', 500);
     }
 });

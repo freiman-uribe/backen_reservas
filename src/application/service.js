@@ -6,9 +6,17 @@ class ItemService {
   async createItem(serviceData) {
     return await this.serviceRepository.create(serviceData);
   }
-  
+
   async getAllItems() {
     return await this.serviceRepository.findAll();
+  }
+
+  async getAllItemsActive() {
+    return await this.serviceRepository.findAllActive();
+  }
+
+  async getAllItemsClient(clientId) {
+    return await this.serviceRepository.findAllClient(clientId,);
   }
 
   async getItem(id) {

@@ -16,11 +16,33 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/cliente", async (req, res) => {
+  try {
+    const reservation = await reservationService.getAllItems();
+    await responseHandler.success(req, res, reservation, 201);
+  } catch (error) {
+    await responseHandler.error(req, res, "Error al obtener servicios", 500);
+  }
+});
+
+router.get("/list", async (req, res) => {
+  try {
+    const reservation = await reservationService.getAllItemsActive();
+    await responseHandler.success(req, res, reservation, 201);
+  } catch (error) {
+    await responseHandler.error(req, res, "Error al obtener servicios", 500);
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
-       const { body } = req;
-        const newReservation = await reservationService.createItem(body);
-        await responseHandler.error(req, res, newReservation, 201);
+    const { body } = req;
+    const cliente = !body.cliente ? req.user.id : body.cliente;
+    const newReservation = await reservationService.createItem({
+      servicio: body.servicio,
+      cliente,
+    });
+    await responseHandler.success(req, res, newReservation, 201);
   } catch (error) {
     await responseHandler.error(req, res, "Error al crear el servicio", 500);
   }
@@ -49,7 +71,6 @@ router.put("/:id", async (req, res) => {
     }
     await responseHandler.success(req, res, reservation, 201);
   } catch (error) {
-    console.log('🚀 ~ router.put ~ error:', error)
     await responseHandler.error(
       req,
       res,

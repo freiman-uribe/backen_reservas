@@ -4,10 +4,11 @@ require('dotenv').config();
 const connectDB = async () => {
   try {
     const uri = process.env.MONGODB_URI;
+    await mongoose.disconnect();
     await mongoose.connect(uri, {
       useUnifiedTopology: true,
     });
-    console.log('MongoDB connected');
+    console.log("MongoDB connected");
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
     process.exit(1);

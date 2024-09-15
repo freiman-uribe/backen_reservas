@@ -1,9 +1,16 @@
 class UserEntity {
-  constructor({ id = null, servicio, cliente, estado } = {}) {
+  constructor({ id = null, email, nombre, password, estado='activo', rol='usuario' } = {}) {
     this.id = id;
-    this.servicio = servicio;
-    this.cliente = cliente;
+    this.email = email,
+    this.nombre = nombre,
+    this.password = password
     this.estado = estado;
+    this.rol = rol;
+  }
+  
+  isValidEmail() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(this.email);
   }
 }
 

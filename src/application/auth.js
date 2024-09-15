@@ -5,18 +5,21 @@ class AuthService {
     this.userRepository = userRepository;
   }
 
+  async getAllItems() {
+    return await this.userRepository.findAll();
+  }
+
   async register(userData) {
     const existingUser = await this.userRepository.findByEmail(userData.email);
     if (existingUser) {
       throw new Error("Email already in use");
-    }
+    } 
 
     return await this.userRepository.create(userData);
   }
 
   async login(email, password) {
     const user = await this.userRepository.findByEmail(email);
-    console.log('🚀 ~ AuthService ~ login ~ user:', user)
     if (!user) {
       throw new Error("Invalid credentials");
     }
@@ -29,26 +32,16 @@ class AuthService {
     const token = this._generateToken(user);
     return {
       token,
-      user: { id: user._id, nombre: user.nombre, email: user.email },
+      user: { nombre: user.nombre, email: user.email, rol: user.rol },
     };
   }
 
   _generateToken(user) {
     return jwt.sign(
-      { id: user._id, nombre: user.nombre, email: user.email },
+      { id: user._id, nombre: user.nombre, email: user.email, rol: user.rol},
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-  }
-
-  async verifyToken(token) {
-    return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return res.status(403).json({ error: "Token inválido" });
-      }
-      req.userId = decoded.userId;
-      next();
-    });
   }
 }
 

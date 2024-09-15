@@ -5,16 +5,20 @@ const UserEntity = require("../../domain/entity/user.entity");
 class MongoUserRepository extends UserRepository {
   async create(userData) {
     const user = new UserEntity({
-      nombre: userData.name,
+      nombre: userData.nombre,
       email: userData.email,
       password: userData.password,
     });
-
     if (!user.isValidEmail()) {
-      throw new Error("Email no válido");
+        throw new Error("Email no válido");
     }
+    
     const newUser = new UserModel(user);
     return await newUser.save();
+  }
+
+  async findAll() {
+    return await UserModel.find({}, '_id nombre');
   }
 
   async findByEmail(userEmail) {

@@ -7,16 +7,20 @@ module.exports = (req, res, next) => {
     return responseHandler.error(req, res, "No token provided", 403);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return responseHandler.error(
-        req,
-        res,
-        "Failed to authenticate token",
-        403
-      );
+  jwt.verify(
+    token.replace("Bearer ", ""),
+    process.env.JWT_SECRET,
+    (err, decoded) => {
+      if (err) {
+        return responseHandler.error(
+          req,
+          res,
+          "Failed to authenticate token",
+          403
+        );
+      }
+      req.user = decoded;
+      next();
     }
-    req.user = decoded;
-    next();
-  });
+  );
 };

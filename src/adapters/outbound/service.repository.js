@@ -1,6 +1,7 @@
 const ItemRepository = require('../../domain/repository/service.repository');
 const ServiseModel = require('../../infrastructure/models/service.model');
 const ServiceEntity = require("../../domain/entity/service.entity");
+const ReservationModel = require("../../infrastructure/models/reservation.model");
 
 class MongoItemRepository extends ItemRepository {
   async create(serviceData) {
@@ -13,6 +14,24 @@ class MongoItemRepository extends ItemRepository {
 
   async findAll() {
     return await ServiseModel.find();
+  }
+
+  async findAllActive() {
+    return await ServiseModel.find({ estado: "activo" });
+  }
+
+  async findAllClient(clientId) {
+    const reservationClient = await ReservationModel.find({
+      estado: "reservado",
+      cliente: clientId
+    });
+      const reservedServiceIds = reservationClient.map(
+        (reservation) => reservation.servicio
+      );
+      return await ServiseModel.find({
+        estado: "activo",
+        _id: { $nin: reservedServiceIds },
+      });
   }
 
   async findById(id) {
@@ -45,11 +64,7 @@ class MongoItemRepository extends ItemRepository {
 
     const { id, estado } = service;
 
-    return await ServiseModel.findByIdAndUpdate(
-      id,
-      { estado },
-      { new: true }
-    );
+    return await ServiseModel.findByIdAndUpdate(id, { estado }, { new: true });
   }
 }
 
