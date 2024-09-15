@@ -16,7 +16,8 @@ class ItemReservation {
   }
 
   async getAllItemsClient(clientId) {
-    return await this.reservationRepository.findAllActive(clientId);
+    console.log('🚀 ~ ItemReservation ~ getAllItemsClient ~ clientId:', clientId)
+    return await this.reservationRepository.findAllClient(clientId);
   }
 
   async getItem(id) {

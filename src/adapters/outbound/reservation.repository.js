@@ -2,6 +2,7 @@ const ReservationRepository = require('../../domain/repository/reservation.repos
 const ReservationModel = require('../../infrastructure/models/reservation.model');
 const ReservationEntity = require("../../domain/entity/reservation.entity");
 
+
 class MongoReservationRepository extends ReservationRepository {
   async create(serviceData) {
     const reservation = new ReservationEntity({
@@ -20,6 +21,15 @@ class MongoReservationRepository extends ReservationRepository {
 
   async findAllActive() {
     return await ReservationModel.find({ estado: "activo" });
+  }
+
+  async findAllClient(clienteId) {
+    return await ReservationModel.find({
+      cliente: clienteId,
+    }).populate("servicio", ["nombre"])
+      .populate("cliente", ["nombre"])
+      .sort({ estado: -1 })
+      .exec();; 
   }
 
   async findById(id) {

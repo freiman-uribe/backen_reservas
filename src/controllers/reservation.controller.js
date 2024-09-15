@@ -18,9 +18,12 @@ router.get("/", async (req, res) => {
 
 router.get("/cliente", async (req, res) => {
   try {
-    const reservation = await reservationService.getAllItems();
+    const { id } = req.user;
+    console.log('🚀 ~ router.get ~ id:', id)
+    const reservation = await reservationService.getAllItemsClient(id);
     await responseHandler.success(req, res, reservation, 201);
   } catch (error) {
+    console.log('🚀 ~ router.get ~ error:', error)
     await responseHandler.error(req, res, "Error al obtener servicios", 500);
   }
 });
